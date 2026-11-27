@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lumina Studio</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span class="brand-name">Lumina</span>
+        <span class="brand-tag">STUDIO</span>
+      </div>
+      <div class="top-actions">
+        <span id="status" class="status" data-i18n="ready">就绪</span>
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" data-lang="zh">中文</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+        <button id="btn-png" class="btn">PNG</button>
+        <button id="btn-export" class="btn primary" data-i18n="exportMp4">导出 MP4</button>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <div class="section-head" data-i18n="palette">配色</div>
+      <div id="color-row" class="color-row"></div>
+      <button id="btn-random" class="btn subtle" data-i18n="randomize">随机配色</button>
+      <button id="btn-palettes" class="btn subtle" data-i18n="palettePresets">预设配色</button>
+      <button id="btn-scenes" class="btn subtle" data-i18n="scenePresets">场景预设</button>
+
+      <div class="field">
+        <label for="seed" data-i18n="seed">种子</label>
+        <input id="seed" type="number" value="1000" step="1" />
+      </div>
+
+      <div class="section-head" data-i18n="generators">生成器</div>
+      <div id="generator-list" class="generator-list"></div>
+
+      <div class="sidebar-note" data-i18n="sidebarNote">
+        14 个生成器已接入；POC 覆盖两条渲染路径。
+      </div>
+    </aside>
+
+    <main class="preview-pane">
+      <div class="preview-wrap">
+        <div class="preview-frame" id="preview-frame" style="aspect-ratio: 3840 / 2160;">
+          <div id="stage"></div>
+        </div>
+        <div class="preview-badge" id="preview-badge">3840 × 2160</div>
+      </div>
+      <div class="transport">
+        <button id="btn-play" class="btn icon" title="暂停 / 播放">暂停</button>
+        <input id="scrub" class="scrub" type="range" min="0" max="3600" value="0" />
+        <span id="time-label" class="time-label">0.00s</span>
+        <span class="transport-hint" data-i18n="previewHint">60fps 预览</span>
+      </div>
+    </main>
+
+    <aside class="inspector">
+      <div class="section-head" data-i18n="transform">变换</div>
+      <div id="transform-params" class="params">
+        <div class="param">
+          <label for="rot" data-i18n="rotation">旋转</label>
+          <output id="rot-out">0°</output>
+          <input id="rot" type="range" min="0" max="360" step="1" value="0" />
+        </div>
+      </div>
+
+      <div class="section-head" data-i18n="parameters">参数</div>
+      <div id="params" class="params"></div>
+
+      <div class="section-head" data-i18n="exportSection">导出</div>
+      <div class="preset-row">
+        <label for="preset" data-i18n="preset">预设</label>
+        <select id="preset">
+          <option value="3840x2160" selected data-i18n="preset4k">4K UHD 3840 × 2160</option>
+          <option value="3840x708" data-i18n="presetUltrawide">超宽 3840 × 708</option>
+          <option value="3440x1440" data-i18n="preset21x9">21:9 带鱼屏 3440 × 1440</option>
+          <option value="3840x1080" data-i18n="preset32x9">32:9 带鱼屏 3840 × 1080</option>
+          <option value="2560x1440" data-i18n="presetQhd">QHD 2560 × 1440</option>
+          <option value="1920x1080" data-i18n="presetHd">HD 1920 × 1080</option>
+          <option value="1080x1920" data-i18n="presetPortrait">竖屏 1080 × 1920</option>
+          <option value="1080x1080" data-i18n="presetSquare">方形 1080 × 1080</option>
+          <option value="custom" data-i18n="presetCustom">自定义</option>
+        </select>
+      </div>
+      <div class="grid2">
+        <label class="field"><span data-i18n="width">宽度</span><input id="exp-w" type="number" value="3840" step="2" min="64" max="3840" /></label>
+        <label class="field"><span data-i18n="height">高度</span><input id="exp-h" type="number" value="2160" step="2" min="64" max="2160" /></label>
+      </div>
+      <div class="grid2">
+        <label class="field"><span data-i18n="fps">帧率</span><select id="exp-fps">
+          <option>24</option><option>25</option><option selected>30</option><option>50</option><option>60</option>
+        </select></label>
+        <label class="field"><span data-i18n="bitrate">码率</span><select id="exp-bitrate">
+          <option value="8">8 Mbps</option>
+          <option value="12">12 Mbps</option>
+          <option value="16" selected>16 Mbps</option>
+          <option value="24">24 Mbps</option>
+          <option value="40">40 Mbps</option>
+        </select></label>
+      </div>
+      <div class="grid2">
+        <label class="field"><span data-i18n="inPoint">入点 (秒)</span><input id="in-point" type="number" value="0" step="0.1" min="0" /></label>
+        <label class="field"><span data-i18n="outPoint">出点 (秒)</span><input id="out-point" type="number" value="10" step="0.1" min="1" max="60" /></label>
+      </div>
+      <div class="preset-row">
+        <label for="loop-mode" data-i18n="loop">循环</label>
+        <select id="loop-mode">
+          <option value="crossfade" selected data-i18n="loopCrossfade">交叉淡化</option>
+          <option value="pingpong" data-i18n="loopPingpong">正倒放</option>
+          <option value="cut" data-i18n="loopCut">硬切</option>
+        </select>
+      </div>
+      <div class="preset-row" id="fade-row">
+        <label for="fade" data-i18n="fade">淡化 (秒)</label>
+        <input id="fade" type="number" value="0.8" step="0.1" min="0.2" max="1.0" />
+      </div>
+      <div class="export-summary" id="export-summary"></div>
+      <div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
+      <div id="progress-text" class="progress-text"></div>
+    </aside>
+  </div>
+
+  <div id="scene-modal" class="modal" aria-hidden="true">
+    <div class="scene-panel" role="dialog" aria-modal="true" aria-labelledby="scene-title">
+      <header class="palette-head">
+        <div>
+          <h2 id="scene-title" data-i18n="scenePresets">场景预设</h2>
+          <p data-i18n="sceneHint">来自 color4bg 的「演示文稿」场景</p>
+        </div>
+        <button id="scene-close" class="modal-close" aria-label="关闭">×</button>
+      </header>
+      <div class="scene-body">
+        <div class="scene-section-label" data-i18n="sceneSlides">演示文稿</div>
+        <div id="scene-grid" class="scene-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="signature">ZION DESIGN</div>
+
+  <div id="palette-modal" class="modal" aria-hidden="true">
+    <div class="palette-panel" role="dialog" aria-modal="true" aria-labelledby="palette-title">
+      <header class="palette-head">
+        <div>
+          <h2 id="palette-title" data-i18n="selectPalette">选择配色预设</h2>
+          <p data-i18n="paletteHint">点击任意配色应用到当前生成器</p>
+        </div>
+        <button id="palette-close" class="modal-close" aria-label="关闭">×</button>
+      </header>
+      <div class="palette-body">
+        <aside id="palette-cats" class="palette-cats"></aside>
+        <div id="palette-grid" class="palette-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../dist/renderer.js"></script>
+</body>
+</html>

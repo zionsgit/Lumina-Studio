@@ -1,0 +1,31 @@
+appId: com.internal.lumina.studio
+productName: Lumina Studio
+directories:
+  output: release-win
+  buildResources: build
+files:
+  - electron/main.js
+  - electron/preload.js
+  - src/renderer/index.html
+  - src/renderer/style.css
+  - src/renderer/scenes/*
+  - src/renderer/icon.png
+  - dist/renderer.js
+  - package.json
+  - '!node_modules/**/*'
+asar: true
+npmRebuild: false
+compression: maximum
+electronLanguages:
+  - zh_CN
+  - zh_TW
+  - en
+  - en_GB
+win:
+  target:
+    - target: dir
+      arch: [x64]
+  icon: build/icon.ico
+  # keep icon + metadata editing, skip only the signature
+  signExecutable: false
+  signAndEditExecutable: true

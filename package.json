@@ -1,0 +1,81 @@
+{
+  "name": "lumina-studio",
+  "version": "1.7.0",
+  "description": "Lumina Studio — ambient generative background studio with seamless MP4 export (Electron + WebGL + WebCodecs)",
+  "license": "MIT",
+  "author": "Internal",
+  "homepage": "https://github.com/zionsgit/Lumina-Studio#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zionsgit/Lumina-Studio.git"
+  },
+  "main": "electron/main.js",
+  "scripts": {
+    "build:renderer": "esbuild src/renderer/app.js --bundle --format=iife --platform=browser --outfile=dist/renderer.js",
+    "start": "pnpm run build:renderer && node scripts/start.js",
+    "start:raw": "node scripts/start.js"
+  },
+  "dependencies": {
+    "color4bg": "0.1.1",
+    "mp4-muxer": "^5.2.2"
+  },
+  "devDependencies": {
+    "electron": "^45.5.0",
+    "electron-builder": "^26.18.0",
+    "esbuild": "^0.28.2"
+  },
+  "build": {
+    "appId": "com.internal.lumina.studio",
+    "productName": "Lumina Studio",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron/main.js",
+      "electron/preload.js",
+      "src/renderer/index.html",
+      "src/renderer/style.css",
+      "src/renderer/scenes/*",
+      "src/renderer/icon.png",
+      "dist/renderer.js",
+      "package.json"
+    ],
+    "asar": true,
+    "npmRebuild": false,
+    "electronDist": "node_modules/electron/dist",
+    "mac": {
+      "target": [
+        {
+          "target": "dir",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.graphics-design",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "icon": "build/icon.icns"
+    },
+    "asarUnpack": [],
+    "compression": "maximum",
+    "electronLanguages": [
+      "zh_CN",
+      "zh_TW",
+      "en",
+      "en_GB"
+    ]
+  },
+  "keywords": [
+    "electron",
+    "webgl",
+    "generative-art",
+    "backgrounds",
+    "video-export",
+    "webcodecs",
+    "mp4",
+    "color4bg"
+  ]
+}
